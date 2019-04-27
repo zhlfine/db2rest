@@ -1,0 +1,27 @@
+# idea ignore
+.idea/
+*.ipr
+*.iml
+*.iws
+
+.vscode/
+
+*.swp
+
+# temp ignore
+*.log
+*.cache
+*.diff
+*.exe
+*.tmp
+
+
+# system ignore
+.DS_Store
+Thumbs.db
+
+# project
+*.cert
+*.key
+test.*
+
