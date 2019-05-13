@@ -1,0 +1,35 @@
+# TOML config
+
+port = 3424
+
+[db]
+url = "postgres://username:password@host:5432/dbname"
+max_open_conn = 3
+max_idle_conn = 1
+max_lifetime_minute = 10
+remove_empty_line = true
+replace_newline_with_space = true
+
+[[api]]
+url = "/test"
+method = "GET"
+params = ['id required:true pattern:^\d+$']
+param_defaults = "id=123"
+output_map = []
+output_map_csv = []
+output_converter = "lowercamel"
+output_converter_csv = "screamingsnake"
+output_type = "single"
+sql_type = "query"
+sql = 'select * from test where id = {{.Param "id" | .Quote }}'
+
+[[api]]
+url = "/test2"
+method = "GET"
+params = ['id required:true pattern:^\d+$', 'name required:true']
+param_defaults = "id=123&name=abc"
+sql_type = "update"
+sql = '''
+insert into test(id,name) values('{{.Param "id"}}','{{.Param "name"}}
+'''
+

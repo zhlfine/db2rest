@@ -1,48 +1,36 @@
 package main
 
 import (
+	"db2rest/api"
+	"db2rest/conf"
+	"syscall"
 	"os"
-	"flag"
 	"log"
-	"github.com/BurntSushi/toml"
+	"flag"
+	_ "github.com/lib/pq"
 )
 
-type arrayflags []string
-
-func (f *arrayflags) String() string {
-    return "config files"
-}
-
-func (f *arrayflags) Set(value string) error {
-    *f = append(*f, value)
-    return nil
-}
-
-var files arrayflags = []string{`C:\calix\golang\db2ms\test.toml`}
-var conf Config
-
-func loadConfig() {
-	flag.Var(&files, "c", "config file")
+func main() {
+	var file string
+    flag.StringVar(&file, "c", "", "config file")
 	flag.Parse()
-
-	if len(files) == 0 {
+	
+	if file == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	for _, f := range files {
-		log.Printf("load config %s\n", f)
-		if _, err := toml.DecodeFile(f, &conf); err != nil {
-			log.Fatal(err)
-		}
+	config, err := conf.LoadFile(file)
+	if err != nil {
+		log.Printf("error: %v\n", err)
+		os.Exit(1)
 	}
-}
 
-func main() {
-	loadConfig()
-	
-	do()
-
-	log.Println("done")
+	server := api.NewServer(config)
+	if err  := server.Run(syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL); err != nil {
+		log.Printf("error: %v\n", err)
+		os.Exit(1)
+	}
+	os.Exit(0)
 }
 
