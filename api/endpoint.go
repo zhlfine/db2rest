@@ -175,10 +175,10 @@ func (e *Endpoint) InitFunc() error {
 func (e *Endpoint) Context(resp http.ResponseWriter, req *http.Request) (*Context, error) {
 	ctx := &Context{api: e, request: req, response: resp}
 	if err := e.Parse(ctx); err != nil {
-		return nil, err
+		return ctx, err
 	}
 	if err := e.Validate(ctx); err != nil {
-		return nil, err
+		return ctx, err
 	}
 	return ctx, nil
 }

@@ -12,7 +12,7 @@ import (
 
 func main() {
 	var file string
-    flag.StringVar(&file, "c", "", "config file")
+    flag.StringVar(&file, "c", "test.toml", "config file")
 	flag.Parse()
 	
 	if file == "" {

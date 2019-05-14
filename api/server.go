@@ -94,3 +94,4 @@ func (svr *Server) Shutdown(ctx context.Context) {
 	svr.server.Shutdown(ctx)
 	svr.db.Close()
 }
+
